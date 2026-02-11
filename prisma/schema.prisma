@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mysql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+  DEVELOPER
+  TESTER
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  full_name       String
+  email           String            @unique
+  password        String
+  role            Role              @default(DEVELOPER)
+  tasks           Task[]            @relation("AssignedTasks")
+  activityHistory ActivityHistory[]
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @db.Text
+  managerId   Int
+  tasks       Task[]
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String
+  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, REJECTED
+  projectId   Int
+  project     Project   @relation(fields: [projectId], references: [id])
+  assigneeId  Int?
+  assignee    User?     @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  subtasks    Subtask[]
+}
+
+model Subtask {
+  id      Int    @id @default(autoincrement())
+  title   String
+  status  String @default("PENDING")
+  taskId  Int
+  task    Task   @relation(fields: [taskId], references: [id])
+}
+
+model ActivityHistory {
+  id          Int      @id @default(autoincrement())
+  entityType  String   // "TASK" or "SUBTASK"
+  entityId    Int      // The ID of the task/subtask
+  oldStatus   String?
+  newStatus   String
+  changedById Int
+  changedBy   User     @relation(fields: [changedById], references: [id])
+  createdAt   DateTime @default(now())
+}

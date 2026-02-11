@@ -9,27 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RolesGuard = void 0;
+exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
-const core_1 = require("@nestjs/core");
-let RolesGuard = class RolesGuard {
-    reflector;
-    constructor(reflector) {
-        this.reflector = reflector;
+const client_1 = require("@prisma/client");
+const adapter_mariadb_1 = require("@prisma/adapter-mariadb");
+let PrismaService = class PrismaService extends client_1.PrismaClient {
+    constructor() {
+        const connectionString = process.env.DATABASE_URL || 'mysql://root:54444@localhost:3306/nest_task_pro';
+        const adapter = new adapter_mariadb_1.PrismaMariaDb(connectionString);
+        super({ adapter });
     }
-    canActivate(context) {
-        const requiredRoles = this.reflector.get('roles', context.getHandler());
-        if (!requiredRoles)
-            return true;
-        const { user } = context.switchToHttp().getRequest();
-        if (user?.role === 'SUPER_ADMIN')
-            return true;
-        return requiredRoles.includes(user?.role);
+    async onModuleInit() {
+        await this.$connect();
+    }
+    async onModuleDestroy() {
+        await this.$disconnect();
     }
 };
-exports.RolesGuard = RolesGuard;
-exports.RolesGuard = RolesGuard = __decorate([
+exports.PrismaService = PrismaService;
+exports.PrismaService = PrismaService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [core_1.Reflector])
-], RolesGuard);
-//# sourceMappingURL=roles.guard.js.map
+    __metadata("design:paramtypes", [])
+], PrismaService);
+//# sourceMappingURL=prisma.service.js.map

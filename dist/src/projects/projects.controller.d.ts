@@ -3,5 +3,10 @@ export declare const Roles: (...roles: string[]) => import("@nestjs/common").Cus
 export declare class ProjectsController {
     private projectsService;
     constructor(projectsService: ProjectsService);
-    create(createProjectDto: any, req: any): any;
+    create(createProjectDto: any, req: any): Promise<{
+        id: number;
+        name: string;
+        description: string;
+        managerId: number;
+    }>;
 }

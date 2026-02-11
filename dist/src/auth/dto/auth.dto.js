@@ -13,17 +13,23 @@ exports.LoginDto = exports.RegisterDto = exports.UserRole = void 0;
 const class_validator_1 = require("class-validator");
 var UserRole;
 (function (UserRole) {
+    UserRole["SUPER_ADMIN"] = "SUPER_ADMIN";
     UserRole["ADMIN"] = "ADMIN";
     UserRole["MANAGER"] = "MANAGER";
     UserRole["DEVELOPER"] = "DEVELOPER";
     UserRole["TESTER"] = "TESTER";
 })(UserRole || (exports.UserRole = UserRole = {}));
 class RegisterDto {
+    full_name;
     email;
     password;
     role;
 }
 exports.RegisterDto = RegisterDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], RegisterDto.prototype, "full_name", void 0);
 __decorate([
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)

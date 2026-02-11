@@ -1,6 +1,7 @@
 import { IsEmail, IsString, IsEnum, MinLength } from 'class-validator';
 
 export enum UserRole {
+    SUPER_ADMIN = 'SUPER_ADMIN',
     ADMIN = 'ADMIN',
     MANAGER = 'MANAGER',
     DEVELOPER = 'DEVELOPER',
@@ -8,6 +9,9 @@ export enum UserRole {
 }
 
 export class RegisterDto {
+    @IsString()
+    full_name: string;
+
     @IsEmail()
     email: string;
 

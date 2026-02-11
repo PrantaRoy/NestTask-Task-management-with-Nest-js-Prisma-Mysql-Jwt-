@@ -41,7 +41,6 @@ var __importStar = (this && this.__importStar) || (function () {
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
@@ -56,27 +55,72 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async register(dto) {
-        const userExists = await this.prisma.user.findUnique({ where: { email: dto.email } });
-        if (userExists)
-            throw new common_1.BadRequestException('User already exists');
-        const hashedPassword = await bcrypt.hash(dto.password, 10);
-        return this.prisma.user.create({
-            data: { ...dto, password: hashedPassword },
-            select: { id: true, email: true, role: true },
+        const userExists = await this.prisma.user.findUnique({
+            where: { email: dto.email },
         });
+        if (userExists) {
+            throw new common_1.BadRequestException('User already exists');
+        }
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+        const user = await this.prisma.user.create({
+            data: {
+                full_name: dto.full_name,
+                email: dto.email,
+                password: hashedPassword,
+                role: dto.role,
+            },
+            select: {
+                id: true,
+                full_name: true,
+                email: true,
+                role: true,
+            },
+        });
+        return user;
     }
     async login(dto) {
-        const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
+        const user = await this.prisma.user.findUnique({
+            where: { email: dto.email },
+        });
         if (!user || !(await bcrypt.compare(dto.password, user.password))) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
-        const payload = { sub: user.id, email: user.email, role: user.role };
-        return { access_token: await this.jwtService.signAsync(payload) };
+        const payload = {
+            sub: user.id,
+            email: user.email,
+            role: user.role,
+            full_name: user.full_name,
+        };
+        return {
+            access_token: await this.jwtService.signAsync(payload),
+            user: {
+                id: user.id,
+                email: user.email,
+                full_name: user.full_name,
+                role: user.role,
+            },
+        };
+    }
+    async getProfile(userId) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                full_name: true,
+                email: true,
+                role: true,
+            },
+        });
+        if (!user) {
+            throw new common_1.UnauthorizedException('User not found');
+        }
+        return user;
     }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object, jwt_1.JwtService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

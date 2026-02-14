@@ -26,6 +26,48 @@ let ProjectsService = class ProjectsService {
             },
         });
     }
+    async findAll() {
+        return this.prisma.project.findMany({
+            include: {
+                manager: true,
+                tasks: {
+                    include: {
+                        assignee: true,
+                    },
+                },
+            },
+        });
+    }
+    async findOne(id) {
+        const project = await this.prisma.project.findUnique({
+            where: { id },
+            include: {
+                manager: true,
+                tasks: {
+                    include: {
+                        assignee: true,
+                    },
+                },
+            },
+        });
+        if (!project) {
+            throw new common_1.NotFoundException(`Project with ID ${id} not found`);
+        }
+        return project;
+    }
+    async update(id, updateProjectDto) {
+        await this.findOne(id);
+        return this.prisma.project.update({
+            where: { id },
+            data: updateProjectDto,
+        });
+    }
+    async remove(id) {
+        await this.findOne(id);
+        return this.prisma.project.delete({
+            where: { id },
+        });
+    }
 };
 exports.ProjectsService = ProjectsService;
 exports.ProjectsService = ProjectsService = __decorate([

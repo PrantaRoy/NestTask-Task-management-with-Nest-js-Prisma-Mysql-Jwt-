@@ -20,6 +20,13 @@ enum Role {
   TESTER
 }
 
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
+}
+
 model User {
   id              Int               @id @default(autoincrement())
   full_name       String
@@ -27,6 +34,7 @@ model User {
   password        String
   role            Role              @default(DEVELOPER)
   tasks           Task[]            @relation("AssignedTasks")
+  managedProjects Project[]         @relation("ProjectManager")
   activityHistory ActivityHistory[]
 }
 
@@ -35,26 +43,31 @@ model Project {
   name        String
   description String   @db.Text
   managerId   Int
+  manager     User     @relation("ProjectManager", fields: [managerId], references: [id])
   tasks       Task[]
 }
 
 model Task {
   id          Int       @id @default(autoincrement())
   title       String
-  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, REJECTED
+  status      Status    @default(PENDING) // PENDING, IN_PROGRESS, COMPLETED, REJECTED
   projectId   Int
   project     Project   @relation(fields: [projectId], references: [id])
   assigneeId  Int?
   assignee    User?     @relation("AssignedTasks", fields: [assigneeId], references: [id])
   subtasks    Subtask[]
+  assign_date DateTime?
+  due_date    DateTime?
 }
 
 model Subtask {
   id      Int    @id @default(autoincrement())
   title   String
-  status  String @default("PENDING")
+  status  Status @default(PENDING)
   taskId  Int
   task    Task   @relation(fields: [taskId], references: [id])
+  assign_date DateTime?
+  due_date    DateTime?
 }
 
 model ActivityHistory {

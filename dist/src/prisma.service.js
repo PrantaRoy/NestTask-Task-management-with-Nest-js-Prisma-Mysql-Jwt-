@@ -13,9 +13,10 @@ exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
 const adapter_mariadb_1 = require("@prisma/adapter-mariadb");
+require("dotenv/config");
 let PrismaService = class PrismaService extends client_1.PrismaClient {
     constructor() {
-        const connectionString = process.env.DATABASE_URL || 'mysql://root:54444@localhost:3306/nest_task_pro';
+        const connectionString = process.env.DATABASE_URL || 'mysql://root:54444@localhost:3306/nest_task_pro?allowPublicKeyRetrieval=true';
         const adapter = new adapter_mariadb_1.PrismaMariaDb(connectionString);
         super({ adapter });
     }

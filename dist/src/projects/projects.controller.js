@@ -16,6 +16,9 @@ exports.ProjectsController = exports.Roles = void 0;
 const common_1 = require("@nestjs/common");
 const projects_service_1 = require("./projects.service");
 const roles_guard_1 = require("../auth/roles.guard");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const create_project_dto_1 = require("./dto/create-project.dto");
+const update_project_dto_1 = require("./dto/update-project.dto");
 const Roles = (...roles) => (0, common_1.SetMetadata)('roles', roles);
 exports.Roles = Roles;
 let ProjectsController = class ProjectsController {
@@ -24,22 +27,64 @@ let ProjectsController = class ProjectsController {
         this.projectsService = projectsService;
     }
     create(createProjectDto, req) {
-        return this.projectsService.create(createProjectDto, req.user.sub);
+        return this.projectsService.create(createProjectDto, createProjectDto.managerId);
+    }
+    findAll() {
+        return this.projectsService.findAll();
+    }
+    findOne(id) {
+        return this.projectsService.findOne(+id);
+    }
+    update(id, updateProjectDto) {
+        return this.projectsService.update(+id, updateProjectDto);
+    }
+    remove(id) {
+        return this.projectsService.remove(+id);
     }
 };
 exports.ProjectsController = ProjectsController;
 __decorate([
     (0, common_1.Post)(),
-    (0, exports.Roles)('MANAGER'),
+    (0, exports.Roles)('MANAGER', 'ADMIN', 'SUPER_ADMIN'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [create_project_dto_1.CreateProjectDto, Object]),
     __metadata("design:returntype", void 0)
 ], ProjectsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ProjectsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], ProjectsController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    (0, exports.Roles)('MANAGER', 'ADMIN', 'SUPER_ADMIN'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_project_dto_1.UpdateProjectDto]),
+    __metadata("design:returntype", void 0)
+], ProjectsController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    (0, exports.Roles)('ADMIN', 'SUPER_ADMIN'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], ProjectsController.prototype, "remove", null);
 exports.ProjectsController = ProjectsController = __decorate([
     (0, common_1.Controller)('projects'),
-    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     __metadata("design:paramtypes", [projects_service_1.ProjectsService])
 ], ProjectsController);
 //# sourceMappingURL=projects.controller.js.map

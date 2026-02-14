@@ -12,11 +12,15 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TasksController = void 0;
+exports.TasksController = exports.Roles = void 0;
 const common_1 = require("@nestjs/common");
 const tasks_service_1 = require("./tasks.service");
 const create_task_dto_1 = require("./dto/create-task.dto");
 const update_task_dto_1 = require("./dto/update-task.dto");
+const roles_guard_1 = require("../auth/roles.guard");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const Roles = (...roles) => (0, common_1.SetMetadata)('roles', roles);
+exports.Roles = Roles;
 let TasksController = class TasksController {
     tasksService;
     constructor(tasksService) {
@@ -41,6 +45,7 @@ let TasksController = class TasksController {
 exports.TasksController = TasksController;
 __decorate([
     (0, common_1.Post)(),
+    (0, exports.Roles)('MANAGER', 'ADMIN', 'SUPER_ADMIN'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_task_dto_1.CreateTaskDto]),
@@ -61,6 +66,7 @@ __decorate([
 ], TasksController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, exports.Roles)('MANAGER', 'ADMIN', 'SUPER_ADMIN'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -69,6 +75,7 @@ __decorate([
 ], TasksController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, exports.Roles)('ADMIN', 'SUPER_ADMIN'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -76,6 +83,7 @@ __decorate([
 ], TasksController.prototype, "remove", null);
 exports.TasksController = TasksController = __decorate([
     (0, common_1.Controller)('tasks'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     __metadata("design:paramtypes", [tasks_service_1.TasksService])
 ], TasksController);
 //# sourceMappingURL=tasks.controller.js.map

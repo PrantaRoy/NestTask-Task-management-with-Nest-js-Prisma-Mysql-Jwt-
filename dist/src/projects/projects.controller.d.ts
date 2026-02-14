@@ -23,9 +23,9 @@ export declare class ProjectsController {
         } & {
             id: number;
             title: string;
-            status: string;
             projectId: number;
             assigneeId: number | null;
+            status: import("@prisma/client").$Enums.Status;
             assign_date: Date | null;
             due_date: Date | null;
         })[];
@@ -54,9 +54,9 @@ export declare class ProjectsController {
         } & {
             id: number;
             title: string;
-            status: string;
             projectId: number;
             assigneeId: number | null;
+            status: import("@prisma/client").$Enums.Status;
             assign_date: Date | null;
             due_date: Date | null;
         })[];

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateTaskDto = void 0;
 const class_validator_1 = require("class-validator");
 const client_1 = require("@prisma/client");
+const swagger_1 = require("@nestjs/swagger");
 class CreateTaskDto {
     title;
     projectId;
@@ -22,31 +23,37 @@ class CreateTaskDto {
 }
 exports.CreateTaskDto = CreateTaskDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Implement Authentication', description: 'The title of the task' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateTaskDto.prototype, "title", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 1, description: 'The ID of the project the task belongs to' }),
     (0, class_validator_1.IsInt)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateTaskDto.prototype, "projectId", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 1, description: 'The ID of the user assigned to the task', required: false }),
     (0, class_validator_1.IsInt)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], CreateTaskDto.prototype, "assigneeId", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ enum: client_1.Status, example: client_1.Status.PENDING, description: 'The status of the task', required: false }),
     (0, class_validator_1.IsEnum)(client_1.Status),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateTaskDto.prototype, "status", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: '2023-12-31T00:00:00.000Z', description: 'The date the task was assigned', required: false }),
     (0, class_validator_1.IsDateString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateTaskDto.prototype, "assign_date", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: '2024-01-31T00:00:00.000Z', description: 'The deadline for the task', required: false }),
     (0, class_validator_1.IsDateString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)

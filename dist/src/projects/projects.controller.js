@@ -19,6 +19,7 @@ const roles_guard_1 = require("../auth/roles.guard");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const create_project_dto_1 = require("./dto/create-project.dto");
 const update_project_dto_1 = require("./dto/update-project.dto");
+const swagger_1 = require("@nestjs/swagger");
 const Roles = (...roles) => (0, common_1.SetMetadata)('roles', roles);
 exports.Roles = Roles;
 let ProjectsController = class ProjectsController {
@@ -44,6 +45,9 @@ let ProjectsController = class ProjectsController {
 };
 exports.ProjectsController = ProjectsController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new project' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'The project has been successfully created.' }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden. Only Managers and Admins can create projects.' }),
     (0, common_1.Post)(),
     (0, exports.Roles)('MANAGER', 'ADMIN', 'SUPER_ADMIN'),
     __param(0, (0, common_1.Body)()),
@@ -53,12 +57,17 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProjectsController.prototype, "create", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get all projects' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Return all projects.' }),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ProjectsController.prototype, "findAll", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get a project by id' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Return the project.' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Project not found.' }),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -66,6 +75,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProjectsController.prototype, "findOne", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Update a project' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'The project has been successfully updated.' }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden. Only Managers and Admins can update projects.' }),
     (0, common_1.Patch)(':id'),
     (0, exports.Roles)('MANAGER', 'ADMIN', 'SUPER_ADMIN'),
     __param(0, (0, common_1.Param)('id')),
@@ -75,6 +87,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProjectsController.prototype, "update", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Delete a project' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'The project has been successfully deleted.' }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden. Only Admins can delete projects.' }),
     (0, common_1.Delete)(':id'),
     (0, exports.Roles)('ADMIN', 'SUPER_ADMIN'),
     __param(0, (0, common_1.Param)('id')),
@@ -83,6 +98,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProjectsController.prototype, "remove", null);
 exports.ProjectsController = ProjectsController = __decorate([
+    (0, swagger_1.ApiTags)('Projects'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('projects'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     __metadata("design:paramtypes", [projects_service_1.ProjectsService])

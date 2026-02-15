@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginDto = exports.RegisterDto = exports.UserRole = void 0;
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 var UserRole;
 (function (UserRole) {
     UserRole["SUPER_ADMIN"] = "SUPER_ADMIN";
@@ -27,19 +28,25 @@ class RegisterDto {
 }
 exports.RegisterDto = RegisterDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 'John Doe', description: 'The full name of the user' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "full_name", void 0);
 __decorate([
-    (0, class_validator_1.IsEmail)(),
+    (0, swagger_1.ApiProperty)({ example: 'john@example.com', description: 'The email of the user' }),
+    (0, class_validator_1.IsEmail)({}, {
+        message: "This email is not valid"
+    }),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 'password123', description: 'The password of the user', minLength: 6 }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(6),
+    (0, class_validator_1.MinLength)(6, { message: 'Password must be at least 6 characters long' }),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "password", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ enum: UserRole, example: UserRole.DEVELOPER, description: 'The role of the user' }),
     (0, class_validator_1.IsEnum)(UserRole),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "role", void 0);
@@ -49,10 +56,12 @@ class LoginDto {
 }
 exports.LoginDto = LoginDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 'john@example.com', description: 'The email of the user' }),
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], LoginDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 'password123', description: 'The password of the user' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], LoginDto.prototype, "password", void 0);

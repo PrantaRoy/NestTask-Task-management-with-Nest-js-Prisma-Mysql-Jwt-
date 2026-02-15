@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateProjectDto = void 0;
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class CreateProjectDto {
     name;
     description;
@@ -18,16 +19,19 @@ class CreateProjectDto {
 }
 exports.CreateProjectDto = CreateProjectDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Website Redesign', description: 'The name of the project' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Redesigning the company website for better UX', description: 'The description of the project' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateProjectDto.prototype, "description", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 1, description: 'The ID of the project manager' }),
     (0, class_validator_1.IsInt)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)

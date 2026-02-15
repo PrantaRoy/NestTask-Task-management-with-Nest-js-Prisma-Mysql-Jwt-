@@ -19,6 +19,7 @@ const create_subtask_dto_1 = require("./dto/create-subtask.dto");
 const update_subtask_dto_1 = require("./dto/update-subtask.dto");
 const roles_guard_1 = require("../auth/roles.guard");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const swagger_1 = require("@nestjs/swagger");
 const Roles = (...roles) => (0, common_1.SetMetadata)('roles', roles);
 exports.Roles = Roles;
 let SubtasksController = class SubtasksController {
@@ -47,6 +48,9 @@ let SubtasksController = class SubtasksController {
 };
 exports.SubtasksController = SubtasksController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new subtask' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'The subtask has been successfully created.' }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden. Only Managers, Developers and Admins can create subtasks.' }),
     (0, common_1.Post)(),
     (0, exports.Roles)('MANAGER', 'ADMIN', 'SUPER_ADMIN', 'DEVELOPER'),
     __param(0, (0, common_1.Body)()),
@@ -55,12 +59,16 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SubtasksController.prototype, "create", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get all subtasks' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Return all subtasks.' }),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], SubtasksController.prototype, "findAll", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get subtasks for a specific task' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Return subtasks for the task.' }),
     (0, common_1.Get)('task/:taskId'),
     __param(0, (0, common_1.Param)('taskId')),
     __metadata("design:type", Function),
@@ -68,6 +76,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SubtasksController.prototype, "findByTask", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get a subtask by id' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Return the subtask.' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Subtask not found.' }),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -75,6 +86,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SubtasksController.prototype, "findOne", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Update a subtask' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'The subtask has been successfully updated.' }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden. Only Managers, Developers and Admins can update subtasks.' }),
     (0, common_1.Patch)(':id'),
     (0, exports.Roles)('MANAGER', 'ADMIN', 'SUPER_ADMIN', 'DEVELOPER'),
     __param(0, (0, common_1.Param)('id')),
@@ -84,6 +98,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SubtasksController.prototype, "update", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Delete a subtask' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'The subtask has been successfully deleted.' }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden. Only Admins can delete subtasks.' }),
     (0, common_1.Delete)(':id'),
     (0, exports.Roles)('ADMIN', 'SUPER_ADMIN'),
     __param(0, (0, common_1.Param)('id')),
@@ -92,6 +109,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SubtasksController.prototype, "remove", null);
 exports.SubtasksController = SubtasksController = __decorate([
+    (0, swagger_1.ApiTags)('Subtasks'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('subtasks'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     __metadata("design:paramtypes", [subtasks_service_1.SubtasksService])

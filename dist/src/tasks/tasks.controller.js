@@ -32,6 +32,33 @@ let TasksController = class TasksController {
     findAll() {
         return this.tasksService.findAll();
     }
+    getTasksReport(status, projectId, userId) {
+        if (userId && status) {
+            return this.tasksService.getTasksByUserAndStatus(+userId, status);
+        }
+        if (userId) {
+            return this.tasksService.getTasksByUser(+userId);
+        }
+        if (status && projectId) {
+            return this.tasksService.getTasksByStatusAndProject(status, +projectId);
+        }
+        if (status) {
+            return this.tasksService.getTasksByStatus(status);
+        }
+        return this.tasksService.findAll();
+    }
+    getTasksByStatus(status) {
+        return this.tasksService.getTasksByStatus(status);
+    }
+    getTasksByStatusAndProject(status, projectId) {
+        return this.tasksService.getTasksByStatusAndProject(status, +projectId);
+    }
+    getTasksByUser(userId) {
+        return this.tasksService.getTasksByUser(+userId);
+    }
+    getTasksByUserAndStatus(userId, status) {
+        return this.tasksService.getTasksByUserAndStatus(+userId, status);
+    }
     findOne(id) {
         return this.tasksService.findOne(+id);
     }
@@ -57,6 +84,45 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], TasksController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('reports'),
+    __param(0, (0, common_1.Query)('status')),
+    __param(1, (0, common_1.Query)('projectId')),
+    __param(2, (0, common_1.Query)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", void 0)
+], TasksController.prototype, "getTasksReport", null);
+__decorate([
+    (0, common_1.Get)('reports/status/:status'),
+    __param(0, (0, common_1.Param)('status')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], TasksController.prototype, "getTasksByStatus", null);
+__decorate([
+    (0, common_1.Get)('reports/status/:status/project/:projectId'),
+    __param(0, (0, common_1.Param)('status')),
+    __param(1, (0, common_1.Param)('projectId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], TasksController.prototype, "getTasksByStatusAndProject", null);
+__decorate([
+    (0, common_1.Get)('reports/user/:userId'),
+    __param(0, (0, common_1.Param)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], TasksController.prototype, "getTasksByUser", null);
+__decorate([
+    (0, common_1.Get)('reports/user/:userId/status/:status'),
+    __param(0, (0, common_1.Param)('userId')),
+    __param(1, (0, common_1.Param)('status')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], TasksController.prototype, "getTasksByUserAndStatus", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

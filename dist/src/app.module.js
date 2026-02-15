@@ -15,12 +15,13 @@ const prisma_module_1 = require("./prisma.module");
 const projects_module_1 = require("./projects/projects.module");
 const users_module_1 = require("./users/users.module");
 const tasks_module_1 = require("./tasks/tasks.module");
+const subtasks_module_1 = require("./subtasks/subtasks.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule, auth_module_1.AuthModule, projects_module_1.ProjectsModule, users_module_1.UsersModule, tasks_module_1.TasksModule],
+        imports: [prisma_module_1.PrismaModule, auth_module_1.AuthModule, projects_module_1.ProjectsModule, users_module_1.UsersModule, tasks_module_1.TasksModule, subtasks_module_1.SubtasksModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

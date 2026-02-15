@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TasksService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
+const client_1 = require("@prisma/client");
 let TasksService = class TasksService {
     prisma;
     constructor(prisma) {
@@ -127,6 +128,124 @@ let TasksService = class TasksService {
             where: { id },
         });
         return { message: `Task with ID ${id} has been deleted successfully` };
+    }
+    async getTasksByStatus(status) {
+        const validStatuses = Object.values(client_1.Status);
+        if (!validStatuses.includes(status)) {
+            throw new common_1.BadRequestException(`Invalid status. Valid values are: ${validStatuses.join(', ')}`);
+        }
+        const tasks = await this.prisma.task.findMany({
+            where: { status: status },
+            include: {
+                project: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+                assignee: {
+                    select: {
+                        id: true,
+                        full_name: true,
+                        email: true,
+                    },
+                },
+                subtasks: true,
+            },
+            orderBy: {
+                id: 'desc',
+            },
+        });
+        return tasks;
+    }
+    async getTasksByStatusAndProject(status, projectId) {
+        const validStatuses = Object.values(client_1.Status);
+        if (!validStatuses.includes(status)) {
+            throw new common_1.BadRequestException(`Invalid status. Valid values are: ${validStatuses.join(', ')}`);
+        }
+        const tasks = await this.prisma.task.findMany({
+            where: {
+                status: status,
+                projectId: projectId,
+            },
+            include: {
+                project: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+                assignee: {
+                    select: {
+                        id: true,
+                        full_name: true,
+                        email: true,
+                    },
+                },
+                subtasks: true,
+            },
+            orderBy: {
+                id: 'desc',
+            },
+        });
+        return tasks;
+    }
+    async getTasksByUser(userId) {
+        const tasks = await this.prisma.task.findMany({
+            where: { assigneeId: userId },
+            include: {
+                project: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+                assignee: {
+                    select: {
+                        id: true,
+                        full_name: true,
+                        email: true,
+                    },
+                },
+                subtasks: true,
+            },
+            orderBy: {
+                id: 'desc',
+            },
+        });
+        return tasks;
+    }
+    async getTasksByUserAndStatus(userId, status) {
+        const validStatuses = Object.values(client_1.Status);
+        if (!validStatuses.includes(status)) {
+            throw new common_1.BadRequestException(`Invalid status. Valid values are: ${validStatuses.join(', ')}`);
+        }
+        const tasks = await this.prisma.task.findMany({
+            where: {
+                assigneeId: userId,
+                status: status,
+            },
+            include: {
+                project: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+                assignee: {
+                    select: {
+                        id: true,
+                        full_name: true,
+                        email: true,
+                    },
+                },
+                subtasks: true,
+            },
+            orderBy: {
+                id: 'desc',
+            },
+        });
+        return tasks;
     }
 };
 exports.TasksService = TasksService;

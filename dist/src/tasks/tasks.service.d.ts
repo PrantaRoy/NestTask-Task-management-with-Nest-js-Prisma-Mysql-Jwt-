@@ -15,13 +15,13 @@ export declare class TasksService {
             email: string;
         } | null;
     } & {
+        id: number;
         title: string;
+        projectId: number;
+        assigneeId: number | null;
         status: import("@prisma/client").$Enums.Status;
         assign_date: Date | null;
         due_date: Date | null;
-        id: number;
-        projectId: number;
-        assigneeId: number | null;
     }>;
     findAll(): Promise<({
         project: {
@@ -34,21 +34,21 @@ export declare class TasksService {
             email: string;
         } | null;
         subtasks: {
+            id: number;
             title: string;
             status: import("@prisma/client").$Enums.Status;
             assign_date: Date | null;
             due_date: Date | null;
-            id: number;
             taskId: number;
         }[];
     } & {
+        id: number;
         title: string;
+        projectId: number;
+        assigneeId: number | null;
         status: import("@prisma/client").$Enums.Status;
         assign_date: Date | null;
         due_date: Date | null;
-        id: number;
-        projectId: number;
-        assigneeId: number | null;
     })[]>;
     findOne(id: number): Promise<{
         project: {
@@ -61,21 +61,21 @@ export declare class TasksService {
             email: string;
         } | null;
         subtasks: {
+            id: number;
             title: string;
             status: import("@prisma/client").$Enums.Status;
             assign_date: Date | null;
             due_date: Date | null;
-            id: number;
             taskId: number;
         }[];
     } & {
+        id: number;
         title: string;
+        projectId: number;
+        assigneeId: number | null;
         status: import("@prisma/client").$Enums.Status;
         assign_date: Date | null;
         due_date: Date | null;
-        id: number;
-        projectId: number;
-        assigneeId: number | null;
     }>;
     update(id: number, updateTaskDto: UpdateTaskDto): Promise<{
         project: {
@@ -88,23 +88,131 @@ export declare class TasksService {
             email: string;
         } | null;
         subtasks: {
+            id: number;
             title: string;
             status: import("@prisma/client").$Enums.Status;
             assign_date: Date | null;
             due_date: Date | null;
-            id: number;
             taskId: number;
         }[];
     } & {
+        id: number;
         title: string;
+        projectId: number;
+        assigneeId: number | null;
         status: import("@prisma/client").$Enums.Status;
         assign_date: Date | null;
         due_date: Date | null;
-        id: number;
-        projectId: number;
-        assigneeId: number | null;
     }>;
     remove(id: number): Promise<{
         message: string;
     }>;
+    getTasksByStatus(status: string): Promise<({
+        project: {
+            id: number;
+            name: string;
+        };
+        assignee: {
+            id: number;
+            full_name: string;
+            email: string;
+        } | null;
+        subtasks: {
+            id: number;
+            title: string;
+            status: import("@prisma/client").$Enums.Status;
+            assign_date: Date | null;
+            due_date: Date | null;
+            taskId: number;
+        }[];
+    } & {
+        id: number;
+        title: string;
+        projectId: number;
+        assigneeId: number | null;
+        status: import("@prisma/client").$Enums.Status;
+        assign_date: Date | null;
+        due_date: Date | null;
+    })[]>;
+    getTasksByStatusAndProject(status: string, projectId: number): Promise<({
+        project: {
+            id: number;
+            name: string;
+        };
+        assignee: {
+            id: number;
+            full_name: string;
+            email: string;
+        } | null;
+        subtasks: {
+            id: number;
+            title: string;
+            status: import("@prisma/client").$Enums.Status;
+            assign_date: Date | null;
+            due_date: Date | null;
+            taskId: number;
+        }[];
+    } & {
+        id: number;
+        title: string;
+        projectId: number;
+        assigneeId: number | null;
+        status: import("@prisma/client").$Enums.Status;
+        assign_date: Date | null;
+        due_date: Date | null;
+    })[]>;
+    getTasksByUser(userId: number): Promise<({
+        project: {
+            id: number;
+            name: string;
+        };
+        assignee: {
+            id: number;
+            full_name: string;
+            email: string;
+        } | null;
+        subtasks: {
+            id: number;
+            title: string;
+            status: import("@prisma/client").$Enums.Status;
+            assign_date: Date | null;
+            due_date: Date | null;
+            taskId: number;
+        }[];
+    } & {
+        id: number;
+        title: string;
+        projectId: number;
+        assigneeId: number | null;
+        status: import("@prisma/client").$Enums.Status;
+        assign_date: Date | null;
+        due_date: Date | null;
+    })[]>;
+    getTasksByUserAndStatus(userId: number, status: string): Promise<({
+        project: {
+            id: number;
+            name: string;
+        };
+        assignee: {
+            id: number;
+            full_name: string;
+            email: string;
+        } | null;
+        subtasks: {
+            id: number;
+            title: string;
+            status: import("@prisma/client").$Enums.Status;
+            assign_date: Date | null;
+            due_date: Date | null;
+            taskId: number;
+        }[];
+    } & {
+        id: number;
+        title: string;
+        projectId: number;
+        assigneeId: number | null;
+        status: import("@prisma/client").$Enums.Status;
+        assign_date: Date | null;
+        due_date: Date | null;
+    })[]>;
 }

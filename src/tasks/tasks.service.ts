@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from '../prisma.service';
+import { Status } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
@@ -133,6 +134,139 @@ export class TasksService {
     });
 
     return { message: `Task with ID ${id} has been deleted successfully` };
+  }
+
+  // Report Methods
+  async getTasksByStatus(status: string) {
+    // Validate status enum
+    const validStatuses = Object.values(Status);
+    if (!validStatuses.includes(status as Status)) {
+      throw new BadRequestException(`Invalid status. Valid values are: ${validStatuses.join(', ')}`);
+    }
+
+    const tasks = await this.prisma.task.findMany({
+      where: { status: status as Status },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        assignee: {
+          select: {
+            id: true,
+            full_name: true,
+            email: true,
+          },
+        },
+        subtasks: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    return tasks;
+  }
+
+  async getTasksByStatusAndProject(status: string, projectId: number) {
+    // Validate status enum
+    const validStatuses = Object.values(Status);
+    if (!validStatuses.includes(status as Status)) {
+      throw new BadRequestException(`Invalid status. Valid values are: ${validStatuses.join(', ')}`);
+    }
+
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        status: status as Status,
+        projectId: projectId,
+      },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        assignee: {
+          select: {
+            id: true,
+            full_name: true,
+            email: true,
+          },
+        },
+        subtasks: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    return tasks;
+  }
+
+  async getTasksByUser(userId: number) {
+    const tasks = await this.prisma.task.findMany({
+      where: { assigneeId: userId },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        assignee: {
+          select: {
+            id: true,
+            full_name: true,
+            email: true,
+          },
+        },
+        subtasks: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    return tasks;
+  }
+
+  async getTasksByUserAndStatus(userId: number, status: string) {
+    // Validate status enum
+    const validStatuses = Object.values(Status);
+    if (!validStatuses.includes(status as Status)) {
+      throw new BadRequestException(`Invalid status. Valid values are: ${validStatuses.join(', ')}`);
+    }
+
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        assigneeId: userId,
+        status: status as Status,
+      },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        assignee: {
+          select: {
+            id: true,
+            full_name: true,
+            email: true,
+          },
+        },
+        subtasks: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    return tasks;
   }
 }
 
